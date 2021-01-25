@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\GuestController;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExcelExport;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,18 +16,45 @@ use App\Http\Controllers\HomeController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes();
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/user', [HomeController::class, 'index'])->name('user');
+Route::group(['middleware' => ['role:Admin']], function () {
+    
+});
+//General
+Route::get('/', [GuestController::class, 'index']);
+Route::get('/home', [GuestController::class, 'index'])->name('home');
+Route::get('/about', [GuestController::class, 'about']);
+Route::get('/buku', [GuestController::class, 'bukufront']);
 
-Route::get('/user/add', [HomeController::class, 'addData']);
+//Member
+Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+Route::get('/memory', [HomeController::class, 'storage'])->name('memory');
+Route::post('/upload', [HomeController::class, 'uploadFile']);
+Route::get('/deletefile/{id}', [HomeController::class, 'deleteFile']);
+Route::post('/deletefiles', [HomeController::class, 'deleteFiles']);
+Route::get('/keluhan', [HomeController::class, 'keluhan']);
+
+//Admin
+Route::get('/user', [HomeController::class, 'user'])->name('user');
 Route::get('/user/detail', [HomeController::class, 'detail'])->name('detail');
-
 Route::get('/direct/{id}', [HomeController::class, 'direct']);
+Route::get('/data/buku', [HomeController::class, 'buku']);
+Route::group(['middleware' => ['role:Admin']], function () {
 
-Route::get('/delete/{id}', [HomeController::class, 'delete']);
-Route::post('/update', [HomeController::class, 'updateUser']);
+    Route::get('/user/add', [HomeController::class, 'addData']);
 
-Route::post('/user/send', [HomeController::class, 'sendUser']);
+    Route::get('/delete/{id}', [HomeController::class, 'delete']);
+    Route::post('/deletes', [HomeController::class, 'deletes']);
+    Route::post('/update', [HomeController::class, 'updateUser']);
 
-Route::view('/test', 'test');
+    Route::post('/user/send', [HomeController::class, 'sendUser']);
+
+    Route::view('/test', 'test');
+
+    //Excel
+    Route::get('/export', [ExcelContrller::class, 'export']);
+
+    Route::get('/import', [ExcelController::class, 'import']);
+    Route::post('/import', [ExcelController::class, 'store'])->name('excel.store');
+});

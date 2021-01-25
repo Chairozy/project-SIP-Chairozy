@@ -6,21 +6,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Memory;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Http\File;
 
 class HomeController extends Controller
 {
     //
     public function __construct()
     {
+        $this->middleware('auth');
         $this->RoleModel = new Role();
         $this->UserModel = new User();
     }
 
-    public function identUserRole($role)
+    //Method
+    public function identUserRole()
     {
+        $role = $this->RoleModel->allData();
         $riur = $this->UserModel->allData();
         for ($i = 0; $i < count($riur); $i++){
             for ($e = 0; $e < count($role); $e++){
@@ -47,6 +54,7 @@ class HomeController extends Controller
     public function namingRole($id)
     {
         $colrole = $this->RoleModel->allData();
+        
         foreach($colrole as $itsrole)
         {
             if ($id == $itsrole->id)
@@ -56,29 +64,96 @@ class HomeController extends Controller
         }
     }
 
+    //Views
     public function index() {
+        $owner = auth()->user();
+        $role = $owner->getRoleNames();
+        $user = User::find($owner->id);
+        $data = ['me' => '2', 'ct' => $user];
+        if($role == 'Admin'){
+            return view('admin/dashboard', $data);
+        }else{
+            return view('member/dashboard', $data);
+        }
+    }
+
+    public function storage() {
+        $user = auth()->user();
+        $file = User::find($user->id)->memory;
+
+        $data = ['me' => '4', 'all' =>$file];
+        return view('member/storage', $data);
+    }
+
+    public function keluhan() {
+        $owner = auth()->user();
+        $user = User::find($owner->id);
+
+        $data = ['me' => '5', 'ct' =>$user];
+        return view('member/reportbug', $data);
+    }
+
+    public function user() {
         $data = [
-            'all' => $this->identUserRole($this->RoleModel->allData()),
+            'all' => $this->identUserRole(),
             'me' => '1'
         ];
 
-        return view('user', $data);
+        return view('admin/user', $data);
     }
 
     public function addData()
     {
         $data = ['me' => '1'];
-        return view('useradd', $data);
+        return view('admin/useradd', $data);
     }
 
     public function detail(Request $request)
     {
         $id = $request->session()->get('id');
-        $one = $this->UserModel->oneData($id);
+        $one = User::find($id);
         $one->role_id = $this->namingRole($one->role_id);
         $data = ['me' => '1', 'ct' => $one];
 
-        return view('userdetail', $data);
+        return view('admin/userdetail', $data);
+    }
+
+    public function buku() {
+        $data = [
+            'me' => '3'
+        ];
+
+        return view('member/buku', $data);
+    }
+
+    //Action
+    public function uploadFile(Request $request)
+    {
+        $user = auth()->user();
+        $fname = $request->file('file')->getClientOriginalName();
+        Request()->validate(['file' => 'required|file|max:5000']);
+        $path = $user->name.'/'.$fname;
+        Storage::putFileAs('public/'.$user->name, $request->file('file'), $fname);
+        Memory::create(['user_id' => $user->id, 'name' => $fname, 'path' => $path]);
+        return redirect()->to('/memory');
+    }
+
+    public function deleteFile($id)
+    {
+        $file = Memory::where('id', $id)->first();
+        Storage::delete('public/'.$file->path);
+        Memory::where('id', $id)->delete();
+        return redirect()->to('/memory');
+    }
+
+    public function deleteFiles(Request $request)
+    {
+        foreach($request->id as $id){
+            $file = Memory::where('id', $id)->first();
+            Storage::delete('public/'.$file->path);
+            Memory::where('id', $id)->delete();
+        }
+        return redirect()->to('/memory');
     }
 
     public function direct(Request $request, $id)
@@ -87,12 +162,15 @@ class HomeController extends Controller
         return redirect()->route('detail');
     }
 
-    public function sendUser()
+    public function sendUser(Request $request)
     {
         Request()->validate([
             'name' => 'required|min:4',
             'username' => 'required|min:3',
             'email' => 'required|unique:users',
+            'phone' => 'required|numeric|min:8',
+            'alamat' => 'required',
+            'tgl_lahir' => 'required',
             'password' => 'required|min:8|same:c_password',
             'c_password' => 'same:password'
         ], [
@@ -102,24 +180,44 @@ class HomeController extends Controller
             'username.min' => 'Minimal 3 karakter',
             'email.required' => 'Email belum di isi',
             'email.unique' => 'Email ini sudah digunakan',
+            'phone.required' => 'Nomor HP belum di isi',
+            'phone.numeric' => 'Hanya boleh memasukkan angka saja',
+            'phone.min' => 'Minimal 8 digit',
+            'alamat.required' => 'Alamat belum di isi',
+            'tgl_lahir.required' => 'Tnggal lahir belum di isi',
             'password.required' => 'Password belum di isi',
             'password.min' => 'Minimal 8 karakter',
             'password.same' => 'Password confirm tidak sama',
             'c_password.same' => 'Password tidak sama'
         ]);
+        
+        if (is_null($request->file('photo'))) {
+            $path = '';
+        }else{
+            $fname = $request->file('photo')->getClientOriginalName();
+            $path = Request()->name.'/'.$fname;
+            Storage::putFileAs('public/'.Request()->name, $request->file('photo'), $fname);
+        }
 
-        $data = [
+        $user = User::create([
             'role_id' => $this->idRole(Request()->role),
+            'photo' => $path,
             'name' => Request()->name,
             'username' => Request()->username,
             'email' => Request()->email,
-            'password' => Hash::make(Request()->password),
+            'gender' => Request()->gender,
+            'phone' => Request()->phone,
+            'alamat' => Request()->alamat,
+            'kebangsaan' => Request()->kebangsaan,
+            'tgl_lahir' => Request()->tgl_lahir,
+            'password' => bcrypt(Request()->password),
             'remember_token' => Str::random(10),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ];
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
 
-        $this->UserModel->addData($data);
+        $user->assignRole(Request()->role);
+
         return redirect()->route('user')->with('pesan', 'Data berhasil ditambahkan');
     }
 
@@ -130,6 +228,9 @@ class HomeController extends Controller
             'name' => 'required|min:4',
             'username' => 'required|min:3',
             'email' => 'required|unique:users,email,'.$id,
+            'phone' => 'required|numeric|min:8',
+            'alamat' => 'required',
+            'tgl_lahir' => 'required',
             'password' => 'required|min:8|same:c_password',
             'c_password' => 'same:password'
         ], [
@@ -139,30 +240,79 @@ class HomeController extends Controller
             'username.min' => 'Minimal 3 karakter',
             'email.required' => 'Email belum di isi',
             'email.unique' => 'Email ini sudah digunakan',
+            'phone.required' => 'Nomor HP belum di isi',
+            'phone.numeric' => 'Hanya boleh memasukkan angka saja',
+            'phone.min' => 'Minimal 8 digit',
+            'alamat.required' => 'Alamat belum di isi',
+            'tgl_lahir.required' => 'Tnggal lahir belum di isi',
             'password.required' => 'Password belum di isi',
             'password.min' => 'Minimal 8 karakter',
             'password.same' => 'Password confirm tidak sama',
             'c_password.same' => 'Password tidak sama'
         ]);
 
-        $data = [
+        $data = User::find($id);
+
+        if ($this->idRole(Request()->role) != $data->role_id) {
+            $data->removeRole($this->namingRole($data->role_id));
+            $data->assignRole(Request()->role);
+        }
+
+        if (is_null($request->file('photo'))) {
+            $path = $data->photo;
+        }else{
+            Storage::delete('public/'.$data->photo);
+            $fname = $request->file('photo')->getClientOriginalName();
+            $path = Request()->name.'/'.$fname;
+            Storage::putFileAs('public/'.Request()->name, $request->file('photo'), $fname);
+        }
+
+        User::find($id)->update([
             'role_id' => $this->idRole(Request()->role),
+            'photo' => $path,
             'name' => Request()->name,
             'username' => Request()->username,
             'email' => Request()->email,
-            'password' => Hash::make(Request()->password),
-            'remember_token' => Str::random(10),
-            'updated_at' => date('Y-m-d H:i:s')
-        ];
+            'gender' => Request()->gender,
+            'phone' => Request()->phone,
+            'alamat' => Request()->alamat,
+            'kebangsaan' => Request()->kebangsaan,
+            'tgl_lahir' => Request()->tgl_lahir,
+            'password' => bcrypt(Request()->password),
+            'updated_at' => now()
+        ]);
 
-        $this->UserModel->editData($id, $data);
         return redirect()->route('user')->with('pesan', 'Perubahan telah disimpan');
     }
 
     public function delete($id)
     {
-        $one = $this->UserModel->oneData($id);
-        $this->UserModel->deleteData($id);
-        return redirect()->route('user')->with('pesan', 'Data berhasil dihapus '.$one->name);
+        $user = User::find($id);
+        Storage::delete('public/'.$user->photo);
+        $hismemory = Memory::where('user_id', $id)->get();
+        foreach ($hismemory as $file) {
+            Storage::delete('public/'.$file->path);
+        }
+        $hismemory->delete();
+        $user->removeRole($this->namingRole($user->role_id));
+        $name = $user->name;
+        $user->delete();
+        return redirect()->route('user')->with('pesan', 'Data berhasil dihapus '.$name);
+    }
+
+    public function deletes(Request $request)
+    {
+        foreach($request->id as $id){
+            $user = User::find($id);
+            $hismemory = Memory::where('user_id', $id)->get();
+            foreach ($hismemory as $file) {
+                Storage::delete('public/'.$file->path);
+            }
+            $hismemory->delete();
+            Storage::delete('public/'.$user->photo);
+            $user->removeRole($this->namingRole($user->role_id));
+            $user->delete();
+        }
+        return redirect()->route('user')->with('pesan', 'Data berhasil dihapus');
     }
 }
