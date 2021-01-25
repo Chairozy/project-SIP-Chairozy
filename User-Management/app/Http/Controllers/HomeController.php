@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Buku;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
@@ -119,8 +120,10 @@ class HomeController extends Controller
     }
 
     public function buku() {
+        $buku = Buku::all();
         $data = [
-            'me' => '3'
+            'me' => '3',
+            'ib' => $buku
         ];
 
         return view('member/buku', $data);
@@ -293,7 +296,7 @@ class HomeController extends Controller
         foreach ($hismemory as $file) {
             Storage::delete('public/'.$file->path);
         }
-        $hismemory->delete();
+        $hismemory->each->delete();
         $user->removeRole($this->namingRole($user->role_id));
         $name = $user->name;
         $user->delete();
@@ -308,11 +311,48 @@ class HomeController extends Controller
             foreach ($hismemory as $file) {
                 Storage::delete('public/'.$file->path);
             }
-            $hismemory->delete();
+            $hismemory->each->delete();
             Storage::delete('public/'.$user->photo);
             $user->removeRole($this->namingRole($user->role_id));
             $user->delete();
         }
         return redirect()->route('user')->with('pesan', 'Data berhasil dihapus');
+    }
+
+    public function sendBuku(Request $request)
+    {
+        if (is_null($request->file('cover'))) {
+            $path_cover = '';
+        }else{
+            $fname_cover = $request->file('cover')->getClientOriginalName();
+            Storage::putFileAs('public/buku/'.Request()->name, $request->file('cover'), $fname_cover);
+        }
+
+        if (is_null($request->file('pdf'))) {
+            $path_pdf = '';
+        }else{
+            $fname_pdf = $request->file('pdf')->getClientOriginalName();
+            Storage::putFileAs('public/buku/'.Request()->name, $request->file('pdf'), $fname_pdf);
+        }
+
+        User::create([
+            'userpost_id' => $this->idRole(Request()->role),
+            'cover' => $fname_cover,
+            'cover_path' => $path_cover,
+            'pdf' => $fname_pdf,
+            'pdf_path' => $path_pdf,
+            'judul' => Request()->judul,
+            'jumlah' => Request()->jumlah,
+            'pengarang' => Request()->pengarang,
+            'penerbit' => Request()->penerbit,
+            'terbit' => Request()->terbit,
+            'tebal_buku' => Request()->tebal_buku,
+            'harga' => Request()->harga,
+            'harga_sebelumnya' => '',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return redirect()->route('buku')->with('pesan', 'Buku berhasil ditambahkan');
     }
 }

@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+
 
 class RegisterController extends Controller
 {
@@ -70,8 +72,14 @@ class RegisterController extends Controller
             'username' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'photo' => '',
+            'gender' => 'Laki-laki',
+            'phone' => '',
+            'alamat' => '',
+            'kebangsaan' => '',
+            'tgl_lahir' => now(),
         ]);
-
+        
         $user->assignRole('user');
         return $user;
     }

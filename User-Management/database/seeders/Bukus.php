@@ -3,17 +3,18 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Buku;
+use Carbon\Carbon;
 
-class DatabaseSeeder extends Seeder
+class Bukus extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        //$this->call(Roles::class);
-        $this->call(Bukus::class);
+        Buku::factory(50)->create();
     }
 }

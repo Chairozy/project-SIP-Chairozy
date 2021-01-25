@@ -74,7 +74,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <form id="ghost" method="POST" action="deletes" enctype="multipart/form-data">
+            <form id="ghost" method="POST" action="/deletes" enctype="multipart/form-data">
             @csrf
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>

@@ -15,8 +15,12 @@ class CreateBukuTable extends Migration
     {
         Schema::create('buku', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
+            $table->integer('userpost_id');
             $table->string('cover');
+            $table->string('cover_path');
+            $table->string('pdf');
+            $table->string('pdf_path');
+            $table->string('judul');
             $table->integer('jumlah');
             $table->string('pengarang');
             $table->string('penerbit');

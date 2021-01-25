@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Exports\ExcelExport;
+use App\Imports\ExcelImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
@@ -12,14 +14,9 @@ class ExcelController extends Controller
         return Excel::download(new ExcelExport, 'excel.xlsx');
     }
 
-    public function import()
-    {
-        return view('import');
-    }
-
-    public function store(Request $request)
+    public function import(Request $request)
     {
         Excel::import(new ExcelImport, $request->file('excel'));
-        return redirect()->route('user');
+        return redirect()->route('buku');
     }
 }

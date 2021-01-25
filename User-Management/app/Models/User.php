@@ -61,6 +61,11 @@ class User extends Authenticatable
         return $this->hasMany(Memory::class);
     }
 
+    public function buku()
+    {
+        return $this->hasMany(Buku::class);
+    }
+
     public function allData()
     {
         return DB::table('users')->get();

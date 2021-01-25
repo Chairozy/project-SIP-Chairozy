@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\ExcelController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExcelExport;
 
@@ -39,8 +40,14 @@ Route::get('/keluhan', [HomeController::class, 'keluhan']);
 Route::get('/user', [HomeController::class, 'user'])->name('user');
 Route::get('/user/detail', [HomeController::class, 'detail'])->name('detail');
 Route::get('/direct/{id}', [HomeController::class, 'direct']);
-Route::get('/data/buku', [HomeController::class, 'buku']);
+Route::get('/data/buku', [HomeController::class, 'buku'])->name('buku');
 Route::group(['middleware' => ['role:Admin']], function () {
+
+    Route::get('/data/buku/add', [HomeController::class, 'sendBuku']);
+
+    Route::get('/data/buku/delete/{id}', [HomeController::class, 'buku_delete']);
+    Route::post('/data/buku/delete', [HomeController::class, 'buku_deletes']);
+    Route::post('/data/buku/update', [HomeController::class, 'updateBuku']);
 
     Route::get('/user/add', [HomeController::class, 'addData']);
 
@@ -50,11 +57,7 @@ Route::group(['middleware' => ['role:Admin']], function () {
 
     Route::post('/user/send', [HomeController::class, 'sendUser']);
 
-    Route::view('/test', 'test');
-
     //Excel
-    Route::get('/export', [ExcelContrller::class, 'export']);
-
-    Route::get('/import', [ExcelController::class, 'import']);
-    Route::post('/import', [ExcelController::class, 'store'])->name('excel.store');
+    Route::get('/export', [ExcelController::class, 'export']);
+    Route::post('/import', [ExcelController::class, 'import']);
 });
