@@ -60,25 +60,20 @@ $("#photo").change(function(){
 });
 
 function edit() {
-    $('#name').prop('disabled', false);
-    $('#username').prop('disabled', false);
-    $('#email').prop('disabled', false);
-    $('#role').prop('disabled', false);
-    $('#photo').prop('disabled', false);
-    $('#phone').prop('disabled', false);
-    $('#alamat').prop('disabled', false);
-    $('#tgl_lahir').prop('disabled', false);
-    $('#kebangsaan').prop('disabled', false);
-    $('#gender').prop('disabled', false);
-    $('#password').prop('disabled', false);
-    $('#password').prop('value', '');
-    $('#c_password').prop('disabled', false);
-    $('#c_password').prop('value', '');
+    $('#cover').prop('disabled', false);
+    $('#pdf').prop('disabled', false);
+    $('#judul').prop('disabled', false);
+    $('#penerbit').prop('disabled', false);
+    $('#terbit').prop('disabled', false);
+    $('#pengarang').prop('disabled', false);
+    $('#harga').prop('disabled', false);
+    $('#jumlah').prop('disabled', false);
+    $('#tebal_buku').prop('disabled', false);
     $('#update').replaceWith('<button id="update" type="submit" class="btn btn-success btn-icon-split"> <span class="icon text-white-50"><i id="icon" class="fas fa-check"></i></span><span id="label" class="text">Simpan</span> </button>');
 }
 </script>
 @endpush
-<form class="row px-4 py-4 mb-auto" action="/update" method="POST" enctype="multipart/form-data">
+<form class="row px-4 py-4 mb-auto" action="/data/buku/update" method="POST" enctype="multipart/form-data">
 @csrf
 <div class="col-md-4">
     <div class="card shadow mb-4">
@@ -87,19 +82,14 @@ function edit() {
         </div>
         <div class="card-body row">
             <div class="form-group col-md-12 mb-auto">
-                <label for="photo" class="col-md-12">Foto Profile</label>
-                <div class="cropped mx-auto"><img src="{{Storage::url('public/'.$ct->photo)}}" id="jimg"></div>
+                <label for="cover" class="col-md-12">Gambar Cover</label>
+                <div class="cropped mx-auto"><img src="" id="jimg"></div>
                 <br>
-                <input type="file" accept=".jpg,.jpeg,.png" id="photo" name="photo" class="col-md-12" disabled></input>
+                <input type="file" accept=".jpg,.jpeg,.png" id="cover" name="cover" class="col-md-12" disabled></input>
             </div>
             <div class="col-md-12">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control" value="{{$ct->username}}" disabled>
-                <div class="text-danger">
-                    @error('username')
-                        {{$message}}
-                    @enderror
-                </div>
+                <label for="pdf">File pdf</label>
+                <input type="file" accept=".jpg,.jpeg,.png" id="pdf" name="pdf" class="col-md-12" disabled></input>
             </div>
         </div>
     </div>
@@ -118,65 +108,36 @@ function edit() {
             @endrole
         </div>
         <div class="card-body row">
-            <div class="col-lg-7">
+            <div class="col-lg-12">
                 <div class="form-group">
-                    <label for="name">Nama</label>
-                    <input type="text" id="name" name="name" class="form-control" value="{{$ct->name}}" disabled>
+                    <label for="judul">Judul</label>
+                    <input type="text" id="judul" name="judul" class="form-control" value="{{$bk->judul}}" disabled>
                     <div class="text-danger">
-                        @error('name')
+                        @error('judul')
                             {{$message}}
                         @enderror
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <div class="form-group">
-                    <label for="phone">Phone</label>
-                    <input type="text" id="phone" name="phone" class="form-control" value="{{$ct->phone}}" disabled>
-                    <div class="text-danger">
-                        @error('phone')
-                            {{$message}}
-                        @enderror
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" value="{{$ct->email}}" disabled>
-                    <div class="text-danger">
-                        @error('email')
-                            {{$message}}
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="form-group">
-                    <label for="role">Role</label>
-                    <select id="role" name="role" class="form-control" disabled>
-                        <option <?php if($ct->role_id == 'User') echo'SELECTED'?> value="User">User</option>
-                        <option <?php if($ct->role_id == 'Admin') echo'SELECTED'?> value="Admin">Admin</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <select id="gender" name="gender" class="form-control" disabled>
-                        <option <?php if($ct->gender == 'Laki-laki') echo'SELECTED'?> value="Laki-laki">Laki-laki</option>
-                        <option <?php if($ct->gender == 'Perempuan') echo'SELECTED'?> value="Perempuan">Perempuan</option>
-                    </select>
                 </div>
             </div>
 
             <div class="col-lg-12">
                 <div class="form-group">
-                    <label for="alamat">Alamat</label>
-                    <input type="text" name="alamat" id="alamat" class="form-control" value="{{$ct->alamat}}" disabled>
+                    <label for="pengarang">Pengarang</label>
+                    <input type="text" name="pengarang" id="pengarang" class="form-control" value="{{$bk->pengarang}}" disabled>
                     <div class="text-danger">
-                        @error('alamat')
+                        @error('pengarang')
+                            {{$message}}
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="penerbit">Penerbit</label>
+                    <input type="text" name="penerbit" id="penerbit" class="form-control" value="{{$bk->penerbit}}" disabled>
+                    <div class="text-danger">
+                        @error('penerbit')
                             {{$message}}
                         @enderror
                     </div>
@@ -185,44 +146,52 @@ function edit() {
 
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label for="tgl_lahir">Tanggal Lahir</label>
-                    <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control" value="{{$ct->tgl_lahir}}" disabled>
+                    <label for="harga">Harga</label>
+                    <input type="text" id="harga" name="harga" class="form-control" value="{{$bk->harga}}" disabled>
                     <div class="text-danger">
-                        @error('tgl_lahir')
+                        @error('harga')
                             {{$message}}
                         @enderror
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label for="kebangsaan">Kebangsaan</label>
-                    <input type="text" name="kebangsaan" id="kebangsaan" class="form-control" value="{{$ct->kebangsaan}}" disabled>
                 </div>
             </div>
 
-            <div class="col">
+            <div class="col-lg-6">
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" value="{{$ct->password}}" disabled>
+                    <label for="jumlah">Jumlah</label>
+                    <input type="text" name="jumlah" id="jumlah" class="form-control" value="{{$bk->jumlah}}" disabled>
                     <div class="text-danger">
-                        @error('password')
+                        @error('jumlah')
                             {{$message}}
                         @enderror
                     </div>
                 </div>
             </div>
-            <div class="col">
+
+            <div class="col-lg-6">
                 <div class="form-group">
-                    <label for="c_password">Confirm Password</label>
-                    <input type="password" name="c_password" id="c_password" class="form-control" value="{{$ct->password}}" disabled>
+                    <label for="terbit">Tahun Terbit</label>
+                    <input type="text" name="terbit" id="terbit" class="form-control" value="{{$bk->terbit}}" disabled>
                     <div class="text-danger">
-                        @error('c_password')
+                        @error('terbit')
                             {{$message}}
                         @enderror
                     </div>
                 </div>
             </div>
+
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="tebal_buku">Tebal Buku</label>
+                    <input type="text" name="tebal_buku" id="tebal_buku" class="form-control" value="{{$bk->tebal_buku}}" disabled>
+                    <div class="text-danger">
+                        @error('tebal_buku')
+                            {{$message}}
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

@@ -36,14 +36,20 @@ Route::get('/deletefile/{id}', [HomeController::class, 'deleteFile']);
 Route::post('/deletefiles', [HomeController::class, 'deleteFiles']);
 Route::get('/keluhan', [HomeController::class, 'keluhan']);
 
-//Admin
+
 Route::get('/user', [HomeController::class, 'user'])->name('user');
 Route::get('/user/detail', [HomeController::class, 'detail'])->name('detail');
 Route::get('/direct/{id}', [HomeController::class, 'direct']);
+
 Route::get('/data/buku', [HomeController::class, 'buku'])->name('buku');
+Route::get('/buku/direct/{id}', [HomeController::class, 'buku_direct']);
+Route::get('/buku/detail', [HomeController::class, 'buku_detail'])->name('buku_detail');
+
+//Admin
 Route::group(['middleware' => ['role:Admin']], function () {
 
-    Route::get('/data/buku/add', [HomeController::class, 'sendBuku']);
+    Route::post('/data/buku/send', [HomeController::class, 'sendBuku']);
+    Route::get('/buku/add', [HomeController::class, 'addBuku']);
 
     Route::get('/data/buku/delete/{id}', [HomeController::class, 'buku_delete']);
     Route::post('/data/buku/delete', [HomeController::class, 'buku_deletes']);

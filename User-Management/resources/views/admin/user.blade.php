@@ -76,7 +76,7 @@
         <div class="table-responsive">
             <form id="ghost" method="POST" action="/deletes" enctype="multipart/form-data">
             @csrf
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr role="row">
                             <th class="align-middle col">Username</th>
@@ -118,7 +118,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Kau yakin ingin menghapusnya?</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">Kamu yakin ingin menghapusnya?</h5>
                                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>

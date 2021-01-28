@@ -129,12 +129,27 @@ class HomeController extends Controller
         return view('member/buku', $data);
     }
 
+    public function addBuku()
+    {
+        $data = ['me' => '3'];
+        return view('buku_app/bukuadd', $data);
+    }
+
+    public function buku_detail(Request $request)
+    {
+        $id = $request->session()->get('id');
+        $one = Buku::find($id);
+        $data = ['me' => '3', 'bk' => $one];
+
+        return view('buku_app/bukudetail', $data);
+    }
+
     //Action
     public function uploadFile(Request $request)
     {
         $user = auth()->user();
         $fname = $request->file('file')->getClientOriginalName();
-        Request()->validate(['file' => 'required|file|max:5000']);
+        $request->validate(['file' => 'required|file|max:5000']);
         $path = $user->name.'/'.$fname;
         Storage::putFileAs('public/'.$user->name, $request->file('file'), $fname);
         Memory::create(['user_id' => $user->id, 'name' => $fname, 'path' => $path]);
@@ -165,9 +180,15 @@ class HomeController extends Controller
         return redirect()->route('detail');
     }
 
+    public function buku_direct(Request $request, $id)
+    {
+        $request->session()->put('id', $id);
+        return redirect()->route('buku_detail');
+    }
+
     public function sendUser(Request $request)
     {
-        Request()->validate([
+        $request->validate([
             'name' => 'required|min:4',
             'username' => 'required|min:3',
             'email' => 'required|unique:users',
@@ -198,28 +219,28 @@ class HomeController extends Controller
             $path = '';
         }else{
             $fname = $request->file('photo')->getClientOriginalName();
-            $path = Request()->name.'/'.$fname;
-            Storage::putFileAs('public/'.Request()->name, $request->file('photo'), $fname);
+            $path = $request->name.'/'.$fname;
+            Storage::putFileAs('public/'.$request->name, $request->file('photo'), $fname);
         }
 
         $user = User::create([
-            'role_id' => $this->idRole(Request()->role),
+            'role_id' => $this->idRole($request->role),
             'photo' => $path,
-            'name' => Request()->name,
-            'username' => Request()->username,
-            'email' => Request()->email,
-            'gender' => Request()->gender,
-            'phone' => Request()->phone,
-            'alamat' => Request()->alamat,
-            'kebangsaan' => Request()->kebangsaan,
-            'tgl_lahir' => Request()->tgl_lahir,
-            'password' => bcrypt(Request()->password),
+            'name' => $request->name,
+            'username' => $request->username,
+            'email' => $request->email,
+            'gender' => $request->gender,
+            'phone' => $request->phone,
+            'alamat' => $request->alamat,
+            'kebangsaan' => $request->kebangsaan,
+            'tgl_lahir' => $request->tgl_lahir,
+            'password' => bcrypt($request->password),
             'remember_token' => Str::random(10),
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
-        $user->assignRole(Request()->role);
+        $user->assignRole($request->role);
 
         return redirect()->route('user')->with('pesan', 'Data berhasil ditambahkan');
     }
@@ -227,7 +248,7 @@ class HomeController extends Controller
     public function updateUser(Request $request)
     {
         $id = $request->session()->get('id');
-        Request()->validate([
+        $request->validate([
             'name' => 'required|min:4',
             'username' => 'required|min:3',
             'email' => 'required|unique:users,email,'.$id,
@@ -256,9 +277,9 @@ class HomeController extends Controller
 
         $data = User::find($id);
 
-        if ($this->idRole(Request()->role) != $data->role_id) {
+        if ($this->idRole($request->role) != $data->role_id) {
             $data->removeRole($this->namingRole($data->role_id));
-            $data->assignRole(Request()->role);
+            $data->assignRole($request->role);
         }
 
         if (is_null($request->file('photo'))) {
@@ -266,22 +287,22 @@ class HomeController extends Controller
         }else{
             Storage::delete('public/'.$data->photo);
             $fname = $request->file('photo')->getClientOriginalName();
-            $path = Request()->name.'/'.$fname;
-            Storage::putFileAs('public/'.Request()->name, $request->file('photo'), $fname);
+            $path = $request->name.'/'.$fname;
+            Storage::putFileAs('public/'.$request->name, $request->file('photo'), $fname);
         }
 
         User::find($id)->update([
-            'role_id' => $this->idRole(Request()->role),
+            'role_id' => $this->idRole($request->role),
             'photo' => $path,
-            'name' => Request()->name,
-            'username' => Request()->username,
-            'email' => Request()->email,
-            'gender' => Request()->gender,
-            'phone' => Request()->phone,
-            'alamat' => Request()->alamat,
-            'kebangsaan' => Request()->kebangsaan,
-            'tgl_lahir' => Request()->tgl_lahir,
-            'password' => bcrypt(Request()->password),
+            'name' => $request->name,
+            'username' => $request->username,
+            'email' => $request->email,
+            'gender' => $request->gender,
+            'phone' => $request->phone,
+            'alamat' => $request->alamat,
+            'kebangsaan' => $request->kebangsaan,
+            'tgl_lahir' => $request->tgl_lahir,
+            'password' => bcrypt($request->password),
             'updated_at' => now()
         ]);
 
@@ -321,38 +342,151 @@ class HomeController extends Controller
 
     public function sendBuku(Request $request)
     {
+        $request->validate([
+            'judul' => 'required',
+            'jumlah' => 'required|numeric',
+            'pengarang' => 'required',
+            'penerbit' => 'required',
+            'terbit' => 'required|max:4|min:4|numeric',
+            'tebal_buku' => 'required|numeric',
+            'harga' => 'required|numeric',
+        ], [
+            'judul.required' => 'Judul belum di isi',
+            'jumlah.numeric' => 'Hanya boleh memasukkan angka saja',
+            'jumlah.required' => 'Jumlah belum di isi',
+            'pengarang.required' => 'Minimal 3 karakter',
+            'terbit.required' => 'Terbit belum di isi',
+            'terbit.min' => 'Minimal 4 huruf',
+            'terbit.max' => 'Maximal 4 huruf',
+            'terbit.numeric' => 'Hanya boleh memasukkan angka saja',
+            'tebal_buku.required' => 'Tebal buku belum di isi',
+            'tebal_buku.numeric' => 'Hanya boleh memasukkan angka saja',
+            'harga.required' => 'Harga belum di isi',
+            'harga.numeric' => 'Hanya boleh memasukkan angka saja',
+        ]);
+
         if (is_null($request->file('cover'))) {
             $path_cover = '';
+            $fname_cover = '';
         }else{
             $fname_cover = $request->file('cover')->getClientOriginalName();
-            Storage::putFileAs('public/buku/'.Request()->name, $request->file('cover'), $fname_cover);
+            Storage::putFileAs('public/buku/'.$request->name, $request->file('cover'), $fname_cover);
         }
 
         if (is_null($request->file('pdf'))) {
             $path_pdf = '';
+            $fname_pdf = '';
         }else{
             $fname_pdf = $request->file('pdf')->getClientOriginalName();
-            Storage::putFileAs('public/buku/'.Request()->name, $request->file('pdf'), $fname_pdf);
+            Storage::putFileAs('public/buku/'.$request->name, $request->file('pdf'), $fname_pdf);
         }
 
         User::create([
-            'userpost_id' => $this->idRole(Request()->role),
+            'userpost_id' => Auth()->user()->id,
             'cover' => $fname_cover,
             'cover_path' => $path_cover,
             'pdf' => $fname_pdf,
             'pdf_path' => $path_pdf,
-            'judul' => Request()->judul,
-            'jumlah' => Request()->jumlah,
-            'pengarang' => Request()->pengarang,
-            'penerbit' => Request()->penerbit,
-            'terbit' => Request()->terbit,
-            'tebal_buku' => Request()->tebal_buku,
-            'harga' => Request()->harga,
+            'judul' => $request->judul,
+            'jumlah' => $request->jumlah,
+            'pengarang' => $request->pengarang,
+            'penerbit' => $request->penerbit,
+            'terbit' => $request->terbit,
+            'tebal_buku' => $request->tebal_buku,
+            'harga' => $request->harga,
             'harga_sebelumnya' => '',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         return redirect()->route('buku')->with('pesan', 'Buku berhasil ditambahkan');
+    }
+
+    public function updateBuku(Request $request)
+    {
+        $id = $request->session()->get('id');
+        $request->validate([
+            'judul' => 'required',
+            'jumlah' => 'required|numeric',
+            'pengarang' => 'required',
+            'penerbit' => 'required',
+            'terbit' => 'required|max:4|min:4|numeric',
+            'tebal_buku' => 'required|numeric',
+            'harga' => 'required|numeric',
+        ], [
+            'judul.required' => 'Judul belum di isi',
+            'jumlah.numeric' => 'Hanya boleh memasukkan angka saja',
+            'jumlah.required' => 'Jumlah belum di isi',
+            'pengarang.required' => 'Minimal 3 karakter',
+            'terbit.required' => 'Terbit belum di isi',
+            'terbit.min' => 'Minimal 4 huruf',
+            'terbit.max' => 'Maximal 4 huruf',
+            'terbit.numeric' => 'Hanya boleh memasukkan angka saja',
+            'tebal_buku.required' => 'Tebal buku belum di isi',
+            'tebal_buku.numeric' => 'Hanya boleh memasukkan angka saja',
+            'harga.required' => 'Harga belum di isi',
+            'harga.numeric' => 'Hanya boleh memasukkan angka saja',
+        ]);
+
+        $data = Buku::find($id);
+
+        if (is_null($request->file('cover'))) {
+            $fname_cover = $data->cover;
+            $path_cover = $data->cover_path;;
+        }else{
+            Storage::delete('public/'.$data->cover_path);
+            $fname_cover = $request->file('cover')->getClientOriginalName();
+            Storage::putFileAs('public/buku/'.$request->name, $request->file('cover'), $fname_cover);
+        }
+
+        if (is_null($request->file('pdf'))) {
+            $fname_pdf = $data->pdf;
+            $path_pdf = $data->pdf_path;
+        }else{
+            Storage::delete('public/'.$data->pdf_path);
+            $fname_pdf = $request->file('pdf')->getClientOriginalName();
+            Storage::putFileAs('public/buku/'.$request->name, $request->file('pdf'), $fname_pdf);
+        }
+
+        User::create([
+            'userpost_id' => Auth()->user()->id,
+            'cover' => $fname_cover,
+            'cover_path' => $path_cover,
+            'pdf' => $fname_pdf,
+            'pdf_path' => $path_pdf,
+            'judul' => $request->judul,
+            'jumlah' => $request->jumlah,
+            'pengarang' => $request->pengarang,
+            'penerbit' => $request->penerbit,
+            'terbit' => $request->terbit,
+            'tebal_buku' => $request->tebal_buku,
+            'harga' => $request->harga,
+            'harga_sebelumnya' => '',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return redirect()->route('buku')->with('pesan', 'Perubahan berhasil disimpan');
+    }
+
+    public function bukudelete($id)
+    {
+        $buku = Buku::find($id);
+        Storage::delete('public/'.$buku->cover_path);
+        Storage::delete('public/'.$buku->pdf_path);
+        $judul = $buku->judul;
+        $buku->delete();
+        return redirect()->route('buku')->with('pesan', 'Data berhasil dihapus '.$judul);
+    }
+
+    public function bukudeletes(Request $request)
+    {
+        foreach($request->id as $id){
+            $buku = Buku::find($id);
+            Storage::delete('public/'.$buku->cover_path);
+            Storage::delete('public/'.$buku->pdf_path);
+            $buku->delete();
+        }
+        return redirect()->route('buku')->with('pesan', 'Data berhasil dihapus');
     }
 }

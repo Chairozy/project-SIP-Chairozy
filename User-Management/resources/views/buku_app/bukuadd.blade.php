@@ -51,28 +51,23 @@ $("#photo").change(function(){
 });
 </script>
 @endpush
-<form class="row px-4 py-4 mb-auto" action="/user/send" method="POST" enctype="multipart/form-data">
+<form class="row px-4 py-4 mb-auto" action="/data/buku/send" method="POST" enctype="multipart/form-data">
 @csrf
 <div class="col-md-4">
     <div class="card shadow mb-4">
         <div class="card-header">
-            <h6 class="m-0 font-weight-bold text-primary">Bagian Profil</h6>
+            <h6 class="m-0 font-weight-bold text-primary">File Buku</h6>
         </div>
         <div class="card-body row">
             <div class="form-group col-md-12 mb-auto">
-                <label for="photo" class="col-md-12">Foto Profile</label>
+                <label for="cover" class="col-md-12">Gambar Cover</label>
                 <div class="cropped mx-auto"><img src="" id="jimg"></div>
                 <br>
-                <input type="file" accept=".jpg,.jpeg,.png" id="photo" name="photo" class="col-md-12"></input>
+                <input type="file" accept=".jpg,.jpeg,.png" id="cover" name="cover" class="col-md-12"></input>
             </div>
             <div class="col-md-12">
-                <label for="username">Username</label>
-                <input type="file" accept=".pdf" id="photo" name="photo" class="col-md-12"></input>
-                <div class="text-danger">
-                    @error('pdf')
-                        {{$message}}
-                    @enderror
-                </div>
+                <label for="pdf">File pdf</label>
+                <input type="file" accept=".jpg,.jpeg,.png" id="pdf" name="pdf" class="col-md-12"></input>
             </div>
         </div>
     </div>
@@ -80,7 +75,7 @@ $("#photo").change(function(){
 <div class="col-md-8">
     <div class="card shadow mb-4">
         <div class="card-header navbar static-top py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Form Pengisian / Penambahan User</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Form Pengisian / Penambahan Buku</h6>
             <button type="submit" class="btn btn-success btn-icon-split">
                 <span class="icon text-white-50">
                     <i class="fas fa-check"></i>
@@ -89,65 +84,36 @@ $("#photo").change(function(){
             </button>
         </div>
         <div class="card-body row">
-            <div class="col-lg-7">
+            <div class="col-lg-12">
                 <div class="form-group">
-                    <label for="name">Nama</label>
-                    <input type="text" id="name" name="name" class="form-control" value="{{old('name')}}">
+                    <label for="judul">Judul</label>
+                    <input type="text" id="judul" name="judul" class="form-control" value="{{old('judul')}}">
                     <div class="text-danger">
-                        @error('name')
+                        @error('judul')
                             {{$message}}
                         @enderror
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <div class="form-group">
-                    <label for="phone">Phone</label>
-                    <input type="text" id="phone" name="phone" class="form-control" value="{{old('phone')}}">
-                    <div class="text-danger">
-                        @error('phone')
-                            {{$message}}
-                        @enderror
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" value="{{old('email')}}">
-                    <div class="text-danger">
-                        @error('email')
-                            {{$message}}
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="form-group">
-                    <label for="role">Role</label>
-                    <select id="role" name="role" class="form-control" value="{{old('role')}}">
-                        <option value="User">User</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <select id="gender" name="gender" class="form-control" value="{{old('gender')}}">
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
-                    </select>
                 </div>
             </div>
 
             <div class="col-lg-12">
                 <div class="form-group">
-                    <label for="alamat">Alamat</label>
-                    <input type="text" name="alamat" id="alamat" class="form-control" value="{{old('alamat')}}">
+                    <label for="pengarang">Pengarang</label>
+                    <input type="text" name="pengarang" id="pengarang" class="form-control" value="{{old('pengarang')}}">
                     <div class="text-danger">
-                        @error('alamat')
+                        @error('pengarang')
+                            {{$message}}
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="penerbit">Penerbit</label>
+                    <input type="text" name="penerbit" id="penerbit" class="form-control" value="{{old('penerbit')}}">
+                    <div class="text-danger">
+                        @error('penerbit')
                             {{$message}}
                         @enderror
                     </div>
@@ -156,44 +122,52 @@ $("#photo").change(function(){
 
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label for="tgl_lahir">Tanggal Lahir</label>
-                    <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control" value="{{old('tgl_lahir')}}">
+                    <label for="harga">Harga</label>
+                    <input type="text" id="harga" name="harga" class="form-control" value="{{old('harga')}}">
                     <div class="text-danger">
-                        @error('tgl_lahir')
+                        @error('harga')
                             {{$message}}
                         @enderror
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label for="kebangsaan">Kebangsaan</label>
-                    <input type="text" name="kebangsaan" id="kebangsaan" class="form-control" value="{{old('kebangsaan')}}">
                 </div>
             </div>
 
-            <div class="col">
+            <div class="col-lg-6">
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" name="password" id="password" class="form-control">
+                    <label for="jumlah">Jumlah</label>
+                    <input type="text" name="jumlah" id="jumlah" class="form-control" value="{{old('jumlah')}}">
                     <div class="text-danger">
-                        @error('password')
+                        @error('jumlah')
                             {{$message}}
                         @enderror
                     </div>
                 </div>
             </div>
-            <div class="col">
+
+            <div class="col-lg-6">
                 <div class="form-group">
-                    <label for="c_password">Confirm Password</label>
-                    <input type="password" name="c_password" id="c_password" class="form-control">
+                    <label for="terbit">Tahun Terbit</label>
+                    <input type="text" name="terbit" id="terbit" class="form-control" value="{{old('terbit')}}">
                     <div class="text-danger">
-                        @error('c_password')
+                        @error('terbit')
                             {{$message}}
                         @enderror
                     </div>
                 </div>
             </div>
+
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="tebal_buku">Tebal Buku</label>
+                    <input type="text" name="tebal_buku" id="tebal_buku" class="form-control" value="{{old('tebal_buku')}}">
+                    <div class="text-danger">
+                        @error('tebal_buku')
+                            {{$message}}
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

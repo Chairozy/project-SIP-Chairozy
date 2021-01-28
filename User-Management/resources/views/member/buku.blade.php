@@ -72,7 +72,7 @@
         <div class="btn-group" id="mchoose">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Edits</button>
             <div class="dropdown-menu shadow" x-placement="bottom-start" style="position: absolute; transform: translate3d(-170px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
-            <a class="dropdown-item" href="/user/add">Tambahkan Buku Baru</a>
+            <a class="dropdown-item" href="/buku/add">Tambahkan Buku Baru</a>
             <a class="dropdown-item" data-toggle="modal" data-target="#modalForm">Import Data Buku</a>
             <a class="dropdown-item" onclick="exportexcel()">Export Data Buku</a>
             <div class="dropdown-divider"></div>
@@ -329,7 +329,7 @@
                         <td class="ci13">{{$data->updated_at}}</td>
                         <td>
                         <div class="btn-group optional" id="atc{{$data->id}}">
-                            <a href="/direct/{{$data->id}}">
+                            <a href="/buku/direct/{{$data->id}}">
                             <button type="button" class="btn btn-success">
                                 <i class="fas fa-info-circle"></i>
                             </button></a>
@@ -348,7 +348,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Kau yakin ingin menghapusnya?</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Kamu yakin ingin menghapusnya?</h5>
                                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">×</span>
                                     </button>
@@ -460,6 +460,7 @@ function mof(self) {
     myf(self.nextElementSibling);
     self.nextElementSibling.value = "";
 }
+
 function myf(self) {
     // Declare variables
     let input, id, filter, method, trw, table, tr, td, i, txtValue;
@@ -475,6 +476,7 @@ function myf(self) {
         if (filter != ""){
         if (td) {
             txtValue = td.textContent || td.innerText;
+            if (parseInt(data === txtValue, 10)) {}
             if (method == "contain") {
                 if (!(txtValue.toUpperCase().indexOf(filter) > -1)) {
                     objfilter[id].push(tr[i].id);
