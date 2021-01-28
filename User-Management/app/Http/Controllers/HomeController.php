@@ -370,7 +370,8 @@ class HomeController extends Controller
             $fname_cover = '';
         }else{
             $fname_cover = $request->file('cover')->getClientOriginalName();
-            Storage::putFileAs('public/buku/'.$request->name, $request->file('cover'), $fname_cover);
+            $path_cover = 'buku/'.$fname_cover;
+            Storage::putFileAs('public/buku/', $request->file('cover'), $fname_cover);
         }
 
         if (is_null($request->file('pdf'))) {
@@ -378,10 +379,11 @@ class HomeController extends Controller
             $fname_pdf = '';
         }else{
             $fname_pdf = $request->file('pdf')->getClientOriginalName();
-            Storage::putFileAs('public/buku/'.$request->name, $request->file('pdf'), $fname_pdf);
+            $path_pdf = 'buku/'.$fname_pdf;
+            Storage::putFileAs('public/buku/', $request->file('pdf'), $fname_pdf);
         }
 
-        User::create([
+        Buku::create([
             'userpost_id' => Auth()->user()->id,
             'cover' => $fname_cover,
             'cover_path' => $path_cover,
@@ -394,7 +396,7 @@ class HomeController extends Controller
             'terbit' => $request->terbit,
             'tebal_buku' => $request->tebal_buku,
             'harga' => $request->harga,
-            'harga_sebelumnya' => '',
+            'harga_sebelumnya' => '0',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -410,7 +412,7 @@ class HomeController extends Controller
             'jumlah' => 'required|numeric',
             'pengarang' => 'required',
             'penerbit' => 'required',
-            'terbit' => 'required|max:4|min:4|numeric',
+            'terbit' => 'required|numeric',
             'tebal_buku' => 'required|numeric',
             'harga' => 'required|numeric',
         ], [
@@ -419,8 +421,6 @@ class HomeController extends Controller
             'jumlah.required' => 'Jumlah belum di isi',
             'pengarang.required' => 'Minimal 3 karakter',
             'terbit.required' => 'Terbit belum di isi',
-            'terbit.min' => 'Minimal 4 huruf',
-            'terbit.max' => 'Maximal 4 huruf',
             'terbit.numeric' => 'Hanya boleh memasukkan angka saja',
             'tebal_buku.required' => 'Tebal buku belum di isi',
             'tebal_buku.numeric' => 'Hanya boleh memasukkan angka saja',
@@ -436,7 +436,8 @@ class HomeController extends Controller
         }else{
             Storage::delete('public/'.$data->cover_path);
             $fname_cover = $request->file('cover')->getClientOriginalName();
-            Storage::putFileAs('public/buku/'.$request->name, $request->file('cover'), $fname_cover);
+            $path_cover = 'buku/'.$fname_cover;
+            Storage::putFileAs('public/buku/', $request->file('cover'), $fname_cover);
         }
 
         if (is_null($request->file('pdf'))) {
@@ -445,10 +446,11 @@ class HomeController extends Controller
         }else{
             Storage::delete('public/'.$data->pdf_path);
             $fname_pdf = $request->file('pdf')->getClientOriginalName();
-            Storage::putFileAs('public/buku/'.$request->name, $request->file('pdf'), $fname_pdf);
+            $path_pdf = 'buku/'.$fname_pdf;
+            Storage::putFileAs('public/buku/', $request->file('pdf'), $fname_pdf);
         }
 
-        User::create([
+        Buku::find($id)->update([
             'userpost_id' => Auth()->user()->id,
             'cover' => $fname_cover,
             'cover_path' => $path_cover,
@@ -461,7 +463,7 @@ class HomeController extends Controller
             'terbit' => $request->terbit,
             'tebal_buku' => $request->tebal_buku,
             'harga' => $request->harga,
-            'harga_sebelumnya' => '',
+            'harga_sebelumnya' => '0',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -488,5 +490,17 @@ class HomeController extends Controller
             $buku->delete();
         }
         return redirect()->route('buku')->with('pesan', 'Data berhasil dihapus');
+    }
+
+    public function pdfpreview($id)
+    {
+        $buku = Buku::find($id);
+        $filename = $buku->pdf;
+        $path = storage_path('public/'.$buku->pdf_path);
+
+        return Response::make(file_get_contents($path), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$filename.'"'
+        ]);
     }
 }

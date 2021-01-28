@@ -11,12 +11,6 @@
     </div>
 </div>
 @isset($all)
-@push('enscript')
-<script>
-    let mode1 = new Array();
-    let mode2 = new Array();
-</script>
-@endpush
 @foreach($all as $data)
 <?php
 $type = 'fa-file';

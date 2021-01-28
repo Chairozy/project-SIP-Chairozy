@@ -3,6 +3,13 @@
 @section('title', 'Users | Add')
 
 @section('content')
+<?php $is_image = ['jpg', 'jpeg', 'png'];?>
+<div class="modal fade bd-example-modal-xl" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl"> 
+        <img src="" class="w-100" id="imagepreview">
+        <button type="button" class="btn btn-default float-left" data-dismiss="modal"></button>
+    </div>
+</div>
 @push('bgstyle')
 <style>
     body, html, #wrapper{
@@ -25,9 +32,18 @@
 @endpush
 @push('enscript')
 <script>
+    let srcimg;
+function setSrcimg(a) {
+    srcimg = a;
+}
+$("#pop").on("click", function() {
+    $('#imagepreview').attr('src', srcimg); 
+    $('#imagemodal').modal('show');
+});
 let img = new Image();
 img.src = $('#jimg').attr("src");
 img.onload = function() {
+    setSrcimg(this.src);
     let val = Math.min(this.width, this.height);
     scale = val / 150;
     nw = this.width / scale;
@@ -40,6 +56,7 @@ function bacaGambar(input) {
       let reader = new FileReader();
  
     reader.onload = function (e) {
+        setSrcimg(e.target.result);
         $('#jimg').attr('src', e.target.result);
         img.src = $('#jimg').attr("src");
         img.onload = function() {
@@ -52,10 +69,10 @@ function bacaGambar(input) {
         }
     }
  
-      reader.readAsDataURL(input.files[0]);
+    reader.readAsDataURL(input.files[0]);
    }
 }
-$("#photo").change(function(){
+$("#cover").change(function(){
    bacaGambar(this);
 });
 
@@ -83,13 +100,15 @@ function edit() {
         <div class="card-body row">
             <div class="form-group col-md-12 mb-auto">
                 <label for="cover" class="col-md-12">Gambar Cover</label>
-                <div class="cropped mx-auto"><img src="" id="jimg"></div>
+                <div class="cropped mx-auto"><img src="{{Storage::url('public/'.$bk->cover_path)}}" id="jimg"></div>
+                <a class="btn text-white btn-secondary" data-toggle="modal" data-target=".bd-example-modal-xl" id="pop">Preview</a>
                 <br>
                 <input type="file" accept=".jpg,.jpeg,.png" id="cover" name="cover" class="col-md-12" disabled></input>
             </div>
             <div class="col-md-12">
                 <label for="pdf">File pdf</label>
-                <input type="file" accept=".jpg,.jpeg,.png" id="pdf" name="pdf" class="col-md-12" disabled></input>
+                <a href="{{Storage::url('public/'.$bk->pdf_path)}}" target="_balnk" class="btn text-white btn-secondary" id="ppp">Preview</a>
+                <input type="file" accept=".pdf" id="pdf" name="pdf" class="col-md-12" disabled></input>
             </div>
         </div>
     </div>

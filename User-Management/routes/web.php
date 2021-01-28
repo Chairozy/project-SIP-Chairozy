@@ -45,6 +45,8 @@ Route::get('/data/buku', [HomeController::class, 'buku'])->name('buku');
 Route::get('/buku/direct/{id}', [HomeController::class, 'buku_direct']);
 Route::get('/buku/detail', [HomeController::class, 'buku_detail'])->name('buku_detail');
 
+
+
 //Admin
 Route::group(['middleware' => ['role:Admin']], function () {
 
