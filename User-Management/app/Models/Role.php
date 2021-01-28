@@ -14,9 +14,4 @@ class Role extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function allData()
-    {
-        return DB::table('roles')->get();
-    }
 }

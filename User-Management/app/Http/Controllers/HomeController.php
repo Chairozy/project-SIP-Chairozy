@@ -28,8 +28,8 @@ class HomeController extends Controller
     //Method
     public function identUserRole()
     {
-        $role = $this->RoleModel->allData();
-        $riur = $this->UserModel->allData();
+        $role = Role::all();
+        $riur = User::all();
         for ($i = 0; $i < count($riur); $i++){
             for ($e = 0; $e < count($role); $e++){
                 if ($riur[$i]->role_id == $role[$e]->id) {
@@ -42,7 +42,7 @@ class HomeController extends Controller
 
     public function idRole($name)
     {
-        $colrole = $this->RoleModel->allData();
+        $colrole = Role::all();
         foreach($colrole as $itsrole)
         {
             if ($name == $itsrole->name)
@@ -54,7 +54,7 @@ class HomeController extends Controller
 
     public function namingRole($id)
     {
-        $colrole = $this->RoleModel->allData();
+        $colrole = Role::all();
         
         foreach($colrole as $itsrole)
         {

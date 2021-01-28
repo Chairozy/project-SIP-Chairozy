@@ -13,7 +13,7 @@ class CreateBukuTable extends Migration
      */
     public function up()
     {
-        Schema::create('buku', function (Blueprint $table) {
+        Schema::create('bukus', function (Blueprint $table) {
             $table->id();
             $table->integer('userpost_id');
             $table->string('cover');
@@ -31,7 +31,7 @@ class CreateBukuTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('log_penambah_buku', function (Blueprint $table) {
+        /**Schema::create('log_penambah_buku', function (Blueprint $table) {
             $table->id();
             $table->integer('pengurus_id');
             $table->integer('buku_id');
@@ -95,7 +95,7 @@ class CreateBukuTable extends Migration
             $table->text('keterangan');
             $table->text('catatan');
             $table->timestamps();
-        });
+        });*/
     }
 
     /**
