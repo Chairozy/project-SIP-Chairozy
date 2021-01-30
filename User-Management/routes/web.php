@@ -53,8 +53,8 @@ Route::group(['middleware' => ['role:Admin']], function () {
     Route::post('/data/buku/send', [HomeController::class, 'sendBuku']);
     Route::get('/buku/add', [HomeController::class, 'addBuku']);
 
-    Route::get('/data/buku/delete/{id}', [HomeController::class, 'buku_delete']);
-    Route::post('/data/buku/delete', [HomeController::class, 'buku_deletes']);
+    Route::get('/data/buku/delete/{id}', [HomeController::class, 'bukudelete']);
+    Route::post('/data/buku/deletes', [HomeController::class, 'bukudeletes']);
     Route::post('/data/buku/update', [HomeController::class, 'updateBuku']);
 
     Route::get('/user/add', [HomeController::class, 'addData']);

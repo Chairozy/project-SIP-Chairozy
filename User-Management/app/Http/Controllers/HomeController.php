@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Memory;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Hash;
@@ -120,10 +121,20 @@ class HomeController extends Controller
     }
 
     public function buku() {
+        $artype = [];
         $buku = Buku::all();
+        $table = Schema::getColumnListing('bukus');
+        array_splice($table, 5, 1);
+        array_splice($table, 3, 1);
+        array_splice($table, 0, 1);
+        foreach($table as $col){
+            array_push($artype, Schema::getColumnType('bukus', $col));
+        }
         $data = [
             'me' => '3',
-            'ib' => $buku
+            'ib' => $buku,
+            'cf' => $artype,
+            'ch' => $table
         ];
 
         return view('member/buku', $data);

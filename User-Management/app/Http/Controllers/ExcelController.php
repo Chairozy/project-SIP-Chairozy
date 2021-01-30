@@ -9,9 +9,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
 {
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(new ExcelExport, 'excel.xlsx');
+        $input = array("no", "no");
+        if (!is_null($request->in)) {
+            $input = $request->in;
+        }
+        return Excel::download(new ExcelExport($request->si, $input, $request->hcn), 'excel.xlsx');
     }
 
     public function import(Request $request)

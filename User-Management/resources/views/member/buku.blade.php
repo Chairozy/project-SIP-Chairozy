@@ -82,231 +82,37 @@
         @endrole
     </div>
     <div class="card-body overflow-auto">
-        <form id="ghost" method="POST" action="deletes" enctype="multipart/form-data">
+        <form id="ghost" method="POST" action="/data/buku/deletes" enctype="multipart/form-data">
         @csrf
             <table class="table table-bordered d-wrap" id="bukutable" width="100%" cellspacing="0">
                 <thead>
                     <tr role="row">
-                        <th id="1"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s1" name="s1" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i1" name="i1" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="no">No</th>
+                        <th id="1"><div class="dropdown clscol">
                         </div>Posted</th>
-                        <th id="2"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s2" name="s2" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i2" name="i2" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="2"><div class="dropdown clscol">
                         </div>Cover</th>
-                        <th id="3"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s3" name="s3" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i3" name="i3" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="3"><div class="dropdown clscol">
                         </div>Pdf</th>
-                        <th id="4"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s4" name="s4" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i4" name="i4" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="4"><div class="dropdown clscol">
                         </div>Judul</th>
-                        <th id="5"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s5" name="s5" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i5" name="i5" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="5"><div class="dropdown clscol">
                         </div>Stock</th>
-                        <th id="6"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s6" name="s6" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i6" name="i6" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="6"><div class="dropdown clscol">
                         </div>Pengarang</th>
-                        <th id="7"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s7" name="s7" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i7" name="i7" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="7"><div class="dropdown clscol">
                         </div>Penerbit</th>
-                        <th id="8"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s8" name="s8" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i8" name="i8" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="8"><div class="dropdown clscol">
                         </div>Tgl Terbit</th>
-                        <th id="9"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s9" name="s9" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i9" name="i9" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="9"><div class="dropdown clscol">
                         </div>Tebal Buku</th>
-                        <th id="10"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s10" name="s10" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i10" name="i10" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="10"><div class="dropdown clscol">
                         </div>Harga Sekarang</th>
-                        <th id="11"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s11" name="s11" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i11" name="i11" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="11"><div class="dropdown clscol">
                         </div>Harga Sebelumnya</th>
-                        <th id="12"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s12" name="s12" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i12" name="i12" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="12"><div class="dropdown clscol">
                         </div>Created at</th>
-                        <th id="13"><div class="dropdown">
-                            <div class="form-group" style="width: 100px;">
-                                <label class="tn">filter</label>
-                                <select id="s13" name="s13" class="form-control dpl" onchange="mof(this)">
-                                    <option value="none">none</option>
-                                    <option value="=">equals</option>
-                                    <option value="!=">not equals</option>
-                                    <option value=">">greater</option>
-                                    <option value=">=">greater equals</option>
-                                    <option value="<">less</option>
-                                    <option value="<=">less equal</option>
-                                    <option value="contain">contains</option>
-                                    <option value="not contain">not contains</option>
-                                </select>
-                                <input type="text" id="i13" name="i13" onkeyup="myf(this)" class="form-control dpl"> 
-                            </div>
+                        <th id="13"><div class="dropdown clscol">
                         </div>Updated at</th>
                         <th>Action</th>
                     </tr>
@@ -314,6 +120,7 @@
                 <tbody>
                     @foreach ($ib as $data)
                     <tr id="scrow{{$data->id}}" class="trw">
+                        <td class="cn"></td>
                         <td class="ci1">{{$data->userpost_id}}</td>
                         <td class="ci2">{{$data->cover}}</td>
                         <td class="ci3">{{$data->pdf}}</td>
@@ -325,7 +132,7 @@
                         <td class="ci9">{{$data->tebal_buku}}</td>
                         <td class="ci10">{{$data->harga}}</td>
                         <td class="ci11">{{$data->harga_sebelumnya}}</td>
-                        <td class="ci12">{{$data->created_at}}</td>
+                        <td class="ci12">{{$data->created_at->format('Y-m-d')}}</td>
                         <td class="ci13">{{$data->updated_at}}</td>
                         <td>
                         <div class="btn-group optional" id="atc{{$data->id}}">
@@ -356,7 +163,7 @@
                                 <div class="modal-body">Data yang dihapus adalah {{$data->name}}.</div>
                                 <div class="modal-footer">
                                     <button class="btn btn-primary" type="button" data-dismiss="modal">Batalkan</button>
-                                    <a class="btn btn-danger" href="/delete/{{$data->id}}">Hapus Data</a>
+                                    <a class="btn btn-danger" href="/data/buku/delete/{{$data->id}}">Hapus Data</a>
                                 </div>
                             </div>
                         </div>
@@ -367,6 +174,16 @@
                 </tbody>
             </table>
         </form>
+        <div class="d-flex justify-content-between">
+            <div class="d-flex flex-inline">
+                <p class="text my-auto tbshow"></p>
+            </div>
+            <div class="d-flex flex-inline">
+                <p class="text my-auto mr-3">Halaman</p>
+                <div class="btn-group" id="tbpage" role="group" aria-label="Basic example">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </div>
@@ -394,7 +211,15 @@
 </div>
 @push('enscript')
 <script>
-var objfilter = {i1:[],i2:[],i3:[],i4:[],i5:[],i6:[],i7:[],i8:[],i9:[],i10:[],i11:[],i12:[],i13:[]};
+let coltype = [];
+let colname = [];
+<?php foreach($cf as $ac) {?>
+coltype.push('<?php echo $ac ?>');
+<?php }?>
+<?php foreach($ch as $ac) {?>
+colname.push('<?php echo $ac ?>');
+<?php }?>
+
 function checks(self) {
     n = $(self).attr('id');
     $('#scrow'+n).toggleClass('rowc');
@@ -438,12 +263,7 @@ function disablemulti() {
 }
 function resure() {
     if(confirm("Apakan Anda yakin ingin menghapus data-data ini?")){
-        let id = [];
-        $(':checkbox:checked').each(function(i){
-            id[i] = $(this).val();
-        });
-
-        if(id.length === 0) {
+        if($(':checkbox:checked').length === 0) {
             alert("pilih minimal satu file");
         }else{
             $('#ghost').submit();
@@ -452,96 +272,16 @@ function resure() {
     }
 }
 function exportexcel() {
+    let idss = [];
+    idss[0] = 5;
+    idss[1] = 10;
     $('#ghost').prop('action', '/export');
     $('#ghost').prop('method', 'get');
     $('#ghost').submit();
 }
-function mof(self) {
-    myf(self.nextElementSibling);
-    self.nextElementSibling.value = "";
-}
-
-function myf(self) {
-    // Declare variables
-    let input, id, filter, method, trw, table, tr, td, i, txtValue;
-    id = self.id;
-    filter = self.value.toUpperCase();
-    tr = document.getElementsByClassName("trw");
-    method = self.previousElementSibling.value;
-    objfilter[id] = [];
-    console.log(objfilter[id]);
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByClassName("c"+id)[0];
-        tr[i].style.display = "";
-        if (filter != ""){
-        if (td) {
-            txtValue = td.textContent || td.innerText;
-            if (parseInt(data === txtValue, 10)) {}
-            if (method == "contain") {
-                if (!(txtValue.toUpperCase().indexOf(filter) > -1)) {
-                    objfilter[id].push(tr[i].id);
-                }
-            }
-            if (method == "not contain") {
-                if (!(txtValue.toUpperCase().indexOf(filter) <= -1)) {
-                    objfilter[id].push(tr[i].id);
-                }
-            }
-            if (method == "=") {
-                if (!(txtValue.toUpperCase() == filter)) {
-                    objfilter[id].push(tr[i].id);
-                }
-            }
-            if (method == "!=") {
-                if (!(txtValue.toUpperCase() != filter)) {
-                    objfilter[id].push(tr[i].id);
-                }
-            }
-            if (method == ">") {
-                if (!(txtValue.localeCompare(filter) > 0)) {
-                    objfilter[id].push(tr[i].id);
-                }
-            }
-
-            if (method == ">=") {
-                if (!(txtValue.localeCompare(filter) >= 0)) {
-                    objfilter[id].push(tr[i].id);
-                }
-            }
-
-            if (method == "<") {
-                if (!(txtValue.localeCompare(filter) < 0)) {
-                    objfilter[id].push(tr[i].id);
-                }
-            }
-
-            if (method == "<=") {
-                if (!(txtValue.localeCompare(filter) <= 0)) {
-                    objfilter[id].push(tr[i].id);
-                }
-            }
-        }
-        }
-    }
-    let len = tr.length;
-    for (let i = 0; i < len; i++) {
-        if (tr[i].style.display == ""){
-            let vis;
-            for(vis in objfilter){
-                let ilen = objfilter[vis].length;
-                for (let ii = 0; ii < ilen; ii++) {
-                    if (objfilter[vis][ii] == tr[i].id) {
-                        tr[i].style.display = "none";
-                        //console.log(tr[i].id);
-                    }
-                }
-            }
-        }
-    }
-    //console.log(objfilter);
-}
 
 </script>
+<script src="{{asset('filter')}}/tablefilter.js"></script>
 @endpush
 @stack('modal')
 @endsection
